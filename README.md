@@ -13,4 +13,4 @@ Utilisation:
 
 Aucun Unit Testing.
 Aucun Factoring raisonnable.
-Aucun rin finalement.
+Aucun rien finalement.
