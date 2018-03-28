@@ -1,0 +1,22 @@
+classdef TestDiffraction < matlab.unittest.TestCase
+    methods (Test)
+        
+        function testATest(testCase)      
+            testCase.verifyEqual(2+3,5);
+        end
+    
+        function testWhatIsAMesh(testCase)
+            [x,y]=meshgrid(-2:1:2, -2:1:2);
+            testCase.verifyEqual([ -2 -1 0 1 2; -2 -1 0 1 2; -2 -1 0 1 2; -2 -1 0 1 2;-2 -1 0 1 2 ], x);
+            testCase.verifyEqual([ -2 -1 0 1 2; -2 -1 0 1 2; -2 -1 0 1 2; -2 -1 0 1 2;-2 -1 0 1 2 ]', y);
+        end
+        
+        function testSquareGeneration(testCase)      
+            
+            image = drawSquae('square', 1, 1, 3);
+            
+            testCase.verifyEqual([ 0 0 0; 0 1 0; 0 0 0], image);
+        end
+
+    end
+end
