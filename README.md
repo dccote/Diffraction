@@ -7,9 +7,9 @@ Trois "sliders": zoom in/out de l'image, intensité (pour mieux voir le contrast
 
 # Utilisation
 1) Téléchargez le code ici en cliquant sur le bouton vert Clone or Download, ensuite Download zip.
-1) Ouvrir MATLAB
-2) Aller dans le repertoire où le code a été décompressé
-3) tapez guiDiffraction dans la console MATLAB
+2) Ouvrir MATLAB
+3) Aller dans le repertoire où le code a été décompressé
+4) tapez guiDiffraction dans la console MATLAB
 
 # Plan général pour le code
 1) Ajouter les échelles d'espace au niveau de la fente et du patron de diffraction
