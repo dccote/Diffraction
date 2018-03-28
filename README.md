@@ -11,6 +11,13 @@ Utilisation:
 3) guiDiffraction
 
 
-Aucun Unit Testing.
-Aucun Factoring raisonnable.
-Aucun rien finalement.
+Plan général pour le code
+1) Ajouter les échelles d'espace au niveau de la fente et du patron de diffraction
+2) Corriger l'interface qui a l'air d'avoir été fait par mon fils (Luc, 4 ans).
+3) Changer le lookup table pour avoir les images en spectrum
+4) Permettre de charger n'importe quel image, pas juste mon image arbitraire.
+
+
+Un peu de Unit Testing est en cours de developpement.
+Aucun Factoring raisonnable. Sera fait après l'ajout du Unit Testing.
+
