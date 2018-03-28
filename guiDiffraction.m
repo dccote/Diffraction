@@ -86,9 +86,9 @@ structureSize = get(handles.size,'Value');;
     
 switch menuSelection
      case 1
-        image=drawShapeIntoMatrix('square',x,y,structureSize);
+        image=generateCenteredSquare(x,y,structureSize);
      case 2
-        image=drawShapeIntoMatrix('circle',x,y,structureSize);
+        image=generateCenteredCircle(x,y,structureSize);
      case 3
         image=imread('arbitraire.tif');
      
