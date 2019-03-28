@@ -5,6 +5,11 @@ from matplotlib.ticker import MaxNLocator
 from numpy import *
 import numpy as np
 
+# This code computes the diffraction pattern in the simplest way possible:
+# by adding spherical ways from the diffraction objstacle. It is extremely
+# inefficient and slow, but it is trivial to understand.
+
+# Everything in microns
 wavelength = 1
 k = 2*pi/wavelength
 I = complex(0,1)
@@ -20,7 +25,6 @@ Y = 1000
 dy = 1
 Ny = int(Y/dy)
 yCoords = [(j-Ny/2)*dy for j in range(Ny)]
-Efield=[0]*Ny # Initialize with no field
 
 # Source size
 S = 50
@@ -36,10 +40,6 @@ if tenPercent == 0:
 for r in range(Nr): 
     Efield=[0]*Ny # Initialize with no field
     R  = (r+1)*dR
-    print("Progress R={0:.0f}/{1}".format(r,Nr))
-    F = S*S/R/wavelength
-    thetaMax = Y/R/2
-    print("F = {0}, F theta^2/4 = {1}".format(F, F*thetaMax*thetaMax/2))
     for s in range(Ns):
         if s % tenPercent == 0:
             print("Progress {0:.0f}%".format(100*s/Ns))
@@ -62,3 +62,7 @@ for r in range(Nr):
 
     fig.savefig("diffraction-{0:03d}.png".format(r), dpi=150)
     plt.close('all')
+
+
+def reportProgress(r, Nr):
+    print("Progress R={0:.0f}/{1}".format(r,Nr))
