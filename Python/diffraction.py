@@ -17,7 +17,7 @@ def diffraction(sCoords, A, k, r, yCoords):
         for i,yf in enumerate(yCoords):
             R = sqrt( (yf-ys)*(yf-ys)+r*r)
             # we don't divide by r because we keep everything normalized
-            Efield[i] = Efield[i] + A * exp(-I*k*R) 
+            Efield[i] += A * exp(-I*k*R) 
 
     return Efield
 
