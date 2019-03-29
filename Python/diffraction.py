@@ -10,7 +10,7 @@ I = complex(0,1)
 def diffraction(sCoords, A, k, r, yCoords):
     """ This is the core of the diffraction code.  Yes it is.
     sum all spherical waves of amplitude A from the source at sCoords
-    on the screen at yCoords """
+    on the screen at yCoords. Done. """
 
     Efield=[0]*Ny # Initialize with no field for a given r
     for ys in sCoords:
@@ -23,7 +23,7 @@ def diffraction(sCoords, A, k, r, yCoords):
 
 def createFigure():
     fig, axes = plt.subplots(figsize=(10, 7))
-    axes.set(xlabel='Distance', ylabel='Intensite', title="Profile de Diffraction")
+    axes.set(xlabel='Distance', ylabel='Intensite', title="Profil de Diffraction")
     axes.set_ylim([0,1])
     return fig, axes
 
