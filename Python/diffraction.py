@@ -62,7 +62,7 @@ if __name__ == "__main__":
     
     # Grating rep
     da = 10
-    Na = 1x
+    Na = 2
     aCoords = [(j-Na/2)*da for j in range(Na)]
 
     gCoords = []
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     k = 2*pi/wavelength
 
     for idx,r in enumerate(rCoords): 
-        reportProgress(idx,Nr)
+        reportProgress(idx,Nr, "Calculation for r={0:1.0f}".format(r))
 
         Gfield = diffraction(gCoords, amplitude/Na, k, r, yCoords)
         Efield = diffraction(sCoords, amplitude, k, r, yCoords)
