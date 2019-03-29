@@ -42,19 +42,19 @@ if __name__ == "__main__":
     # inefficient and slow, but it is trivial to understand.
 
     # Distance to screen
-    R = 30000 # Distance source-screen in µm
-    Nr = 2
+    R = 3000 # Distance source-screen in µm
+    Nr = 10
     dR = R/Nr
     rCoords = [(r+1)*dR for r in range(Nr)]
 
     # Screen size in µm
-    Y = 1000
+    Y = 200
     dy = 1
     Ny = int(Y/dy)
     yCoords = [(j-Ny/2)*dy for j in range(Ny)]
 
     # Source size in µm
-    S = 50
+    S = 25
     ds = 0.1
     Ns = int(S/ds)
     sCoords = [(j-Ns/2)*ds for j in range(Ns)]
