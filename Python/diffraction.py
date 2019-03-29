@@ -33,8 +33,8 @@ def reportProgress(r, Nr):
     if tenPercent == 0:
         tenPercent = 1
 
-    #if r % tenPercent == 0:
-    print("Progress {0:.0f}%".format(100*r/Nr))
+    if r % tenPercent == 0:
+        print("Progress {0:.0f}%".format(100*r/Nr))
 
 if __name__ == "__main__":
       # This code computes the diffraction pattern in the simplest way possible:
