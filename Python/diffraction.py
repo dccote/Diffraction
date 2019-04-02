@@ -13,12 +13,12 @@ def diffraction(sCoords, A, k, r, yCoords, progressMessage="Summing source contr
     on the screen at yCoords. Done. """
 
     Efield=[0]*Ny # Initialize with no field for a given r
-    for j,ys in enumerate(sCoords):
+    for j,y_source in enumerate(sCoords):
         reportProgress(j,len(sCoords), progressMessage)
-        for i,yf in enumerate(yCoords):
-            R = sqrt( (yf-ys)*(yf-ys)+r*r)
+        for i,y_screen in enumerate(yCoords):
+            Ro = sqrt( (y_screen-y_source)**2 + r**2)
             # we don't divide by r because we keep everything normalized
-            Efield[i] += A * exp(-I*k*R) 
+            Efield[i] += A * exp(-I*k*Ro) 
 
     return Efield
 
@@ -66,6 +66,7 @@ if __name__ == "__main__":
     Nb = 2
     bCoords = [(j-Nb/2)*b for j in range(Nb)]
 
+    # Grating coordinates, i.e. repetition of slit 'a', every 'b' coordinate.
     gCoords = []
     for x in bCoords:
         gCoords.extend([ x+y for y in aCoords])
