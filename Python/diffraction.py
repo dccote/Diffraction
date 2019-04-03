@@ -106,7 +106,7 @@ if __name__ == "__main__":
     # Common definition: Distance to screen
     R = 8000 # Distance source-screen in µm
 
-    # Common definition: We sample as a function of theta every dTheta
+    # Common definition: We calculate on a screen of size Y
     Y = 8000
     dY = 10
     Ny = int(Y/dY)
