@@ -4,14 +4,15 @@ Vous trouverez dans ces deux repertoires du code pour calculer la diffraction: u
 
 ## Python et diffraction
 
-Le code Python est particulièrement simple: une somme d'onde sphérique, sur une fente de largeur $S$. On regarde sur un écran à une distance $R​$. C'est tout. Voici le code dans toute sa splendeur:
+Le code Python est particulièrement simple: une somme d'onde sphérique, sur une ou plusieurs fentes de largeur $a$, séparées par une distance $b$. On conserve les coordonnées  et les amplitudes des sources dans deux listes séparées: `sCoords` (la position y) et `sAmplitudes` (l'amplitude complexe).  On regarde sur un écran à une distance $r$, avec les coordonnées `screenCoords`. C'est tout. Voici le code dans toute sa splendeur:
 
 ```python
-def diffraction(sCoords, A, k, r, yCoords):
-    Efield=[0]*Ny # Initialize with no field for a given r
+def diffraction(sCoords, sAmplitudes, k, r, screenCoords, progressMessage):
+    Efield=[0]*len(screenCoords) # Initialize with no field for a given r
     for j,y_source in enumerate(sCoords):
+        A = sAmplitudes[j]
         reportProgress(j,len(sCoords), progressMessage)
-        for i,y_screen in enumerate(yCoords):
+        for i,y_screen in enumerate(screenCoords):
             Ro = sqrt( (y_screen-y_source)**2 + r**2)
             # we don't divide by r because we keep everything normalized
             Efield[i] += A * exp(-I*k*Ro) 
@@ -19,9 +20,9 @@ def diffraction(sCoords, A, k, r, yCoords):
     return Efield
 ```
 
-![image-20190402193409626](assets/image-20190402193409626.png)
+![image-20190403014332972](assets/image-20190403014332972.png)
 
-Le code est d'une lenteur à faire peur. Toute personne le moindrement renseigné comprendra qu'une version en transformée de Fourier discrète sera essentiellement instantanée. 
+Le code est d'une lenteur à faire peur. Une version qui fait appel aux transformées de Fourier discrètes sera essentiellement instantanée. 
 
 
 
