@@ -53,7 +53,7 @@ def reportProgress(i, N, label=""):
         print("{0} {1:.0f}%".format(label, percent))
 
 
-def singleSlitOpaqueWall(a, da):
+def sourceSingleSlitOpaqueWall(a, da):
     """ We return two lists: one with the space coordinates, one with the 
     amplitude at the corresponding coordinate. 
     Amplitude is zero outside of coordinates from aCoords. """
@@ -66,7 +66,7 @@ def singleSlitOpaqueWall(a, da):
 
     return (aCoords, amplitudes)
 
-def gratingFromSingleSlit(aCoords, amplitudes, b, Nb):
+def sourcePeriodicSlitOpaqueWall(aCoords, amplitudes, b, Nb):
     """ We repeat the provided amplitudes, every 'b' distance, Nb times.  This is
     therefore a "grating" """
 
@@ -80,11 +80,11 @@ def gratingFromSingleSlit(aCoords, amplitudes, b, Nb):
 
     return (gCoords, gratingAmplitudes)
 
-def singleSlitWithLinearPhaseOpaqueWall(a, da, minPhase, maxPhase):
+def sourceSingleSlitWithLinearPhaseOpaqueWall(a, da, minPhase, maxPhase):
     """ We return the coordinates and amplitude of a single slit with a linear phase from
     minPhase (at x = 0) to maxPhase (at x = a).
     """
-    (aCoords, amplitudes) = singleSlitOpaqueWall(a, da)
+    (aCoords, amplitudes) = sourceSingleSlitOpaqueWall(a, da)
 
     phaseSlope = (maxPhase - minPhase)
     phaseIntercept = minPhase - phaseSlope*aCoords[0] # We want minPhase at aCoords[0]
@@ -115,24 +115,24 @@ if __name__ == "__main__":
     # First example: single slit
     a = 5
     da = 0.1
-    (aCoords, amplitudes) = singleSlitOpaqueWall(a=5, da=0.1)
+    (aCoords, amplitudes) = sourceSingleSlitOpaqueWall(a=5, da=0.1)
     Efield = diffraction(aCoords, amplitudes, k, R, screenCoords, progressMessage="Calcul fente simple")
     showDiffractedIntensity(screenCoords, Efield,title="Figure: Profil à R={0} mm d'une fente de largeur a={1} µm".format(R/1000,a))
     envelope = abs(Efield*conjugate(Efield))
 
     # Second example: 2 slits separated by small distance (b-a)
-    (aCoords, amplitudes) = singleSlitOpaqueWall(a=5, da=0.1)
+    (aCoords, amplitudes) = sourceSingleSlitOpaqueWall(a=5, da=0.1)
     b = 10
     Nb = 2
-    (gratingCoords, gratingAmplitudes) = gratingFromSingleSlit(aCoords, amplitudes, b=b, Nb=Nb)
+    (gratingCoords, gratingAmplitudes) = sourcePeriodicSlitOpaqueWall(aCoords, amplitudes, b=b, Nb=Nb)
     Efield = diffraction(gratingCoords, gratingAmplitudes, k, R, screenCoords, progressMessage="Calcul fente double")
     showDiffractedIntensity( screenCoords, Efield, envelope=envelope, title="Figure: Profil à R={0} mm de 2 fentes de largeur a=5 µm séparées par {1:d} µm".format(R/1000, b-a))
 
     # Third example: 10 slits separated by small distance (b-a)
-    (aCoords, amplitudes) = singleSlitOpaqueWall(a=a, da=da)
+    (aCoords, amplitudes) = sourceSingleSlitOpaqueWall(a=a, da=da)
     b = 10
     Nb = 10
-    (gratingCoords, gratingAmplitudes) = gratingFromSingleSlit(aCoords, amplitudes, b=b, Nb=Nb)
+    (gratingCoords, gratingAmplitudes) = sourcePeriodicSlitOpaqueWall(aCoords, amplitudes, b=b, Nb=Nb)
     Efield = diffraction(gratingCoords, gratingAmplitudes, k, R, screenCoords, progressMessage="Calcul {0} fentes".format(Nb))
     showDiffractedIntensity(screenCoords, Efield, envelope=envelope, title="Figure: Profil à R={0} mm de 10 fentes de largeur a=5 µm séparées par {1:d} µm".format(R/1000, b-a))
 
@@ -141,19 +141,19 @@ if __name__ == "__main__":
     n = 1.5
     minPhase=k*d
     maxPhase=k*d*n
-    (aCoords, amplitudes) = singleSlitWithLinearPhaseOpaqueWall(a=a, da=da, minPhase=minPhase, maxPhase=maxPhase)
+    (aCoords, amplitudes) = sourceSingleSlitWithLinearPhaseOpaqueWall(a=a, da=da, minPhase=minPhase, maxPhase=maxPhase)
     Efield = diffraction(aCoords, amplitudes, k, R, screenCoords, progressMessage="Calcul fente simple avec masque")
     showDiffractedIntensity(screenCoords, Efield,title="Figure: Profil à R={0} mm d'une fente de largeur a=5 µm\navec un masque de phase lineaire de {1:0.2f} rad à {2:0.2f} rad\nNotez le deplacement vers la droite.".format(R/1000, minPhase, maxPhase))
 
     # Fifth example: grating of slits from #4 with a linear phase mask from minPhase to maxPhase
-    (aCoords, amplitudes) = singleSlitWithLinearPhaseOpaqueWall(a=a, da=da, minPhase=minPhase, maxPhase=maxPhase)
-    (gratingCoords, gratingAmplitudes) = gratingFromSingleSlit(aCoords, amplitudes, b=10, Nb=5)
+    (aCoords, amplitudes) = sourceSingleSlitWithLinearPhaseOpaqueWall(a=a, da=da, minPhase=minPhase, maxPhase=maxPhase)
+    (gratingCoords, gratingAmplitudes) = sourcePeriodicSlitOpaqueWall(aCoords, amplitudes, b=10, Nb=5)
     envelope = abs(Efield*conjugate(Efield)) # The field from example #4 gives us the envelope
     Efield = diffraction(gratingCoords, gratingAmplitudes, k, R, screenCoords, progressMessage="Calcul reseau de fentes simples avec masque")
     showDiffractedIntensity(screenCoords, Efield, envelope=envelope, title="Figure: Profil à R={0} mm de 10 fentes de largeur a=5 µm\navec un masque de phase lineaire de {1:0.2f} rad à {2:0.2f} rad".format(R/1000, minPhase, maxPhase))
 
     # Sixth example: single slit, but in Fresnel zone (very close!)
-    (aCoords, amplitudes) = singleSlitOpaqueWall(a, da)
+    (aCoords, amplitudes) = sourceSingleSlitOpaqueWall(a, da)
     Rclose = 10
     screenCoordsClose = [(j-(Ny-1)/2)*dY/200 for j in range(Ny)]
     Efield = diffraction(aCoords, amplitudes, k, Rclose, screenCoordsClose, progressMessage="Calcul fente simple, zone de Fresnel")
