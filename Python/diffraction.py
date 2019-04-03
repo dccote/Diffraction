@@ -7,15 +7,19 @@ import numpy as np
 
 I = complex(0,1)
 
-def diffraction(sCoords, A, k, r, yCoords, progressMessage="Summing source contributions"):
+def diffraction(sCoords, sAmplitudes, k, r, screenCoords, progressMessage="Computing diffraction"):
     """ This is the core of the diffraction code.  Yes it is.
     sum all spherical waves of amplitude A from the source at sCoords
     on the screen at yCoords. Done. """
 
-    Efield=[0]*Ny # Initialize with no field for a given r
+    if len(sCoords) != len(sAmplitudes):
+        raise ValueError("Array not same size coords={0:d}, amplitude={1:d}".format(len(sCoords), len(sAmplitudes)))
+
+    Efield=[0]*len(screenCoords) # Initialize with no field for a given r
     for j,y_source in enumerate(sCoords):
+        A = sAmplitudes[j]
         reportProgress(j,len(sCoords), progressMessage)
-        for i,y_screen in enumerate(yCoords):
+        for i,y_screen in enumerate(screenCoords):
             Ro = sqrt( (y_screen-y_source)**2 + r**2)
             # we don't divide by r because we keep everything normalized
             Efield[i] += A * exp(-I*k*Ro) 
@@ -26,72 +30,145 @@ def createFigure():
     fig, axes = plt.subplots(figsize=(10, 7))
     axes.set(xlabel='Distance', ylabel='Intensite')
     axes.set_title("Profil de Diffraction")
-#    axes.set_ylim([0,1])
     return fig, axes
+
+def showDiffractedIntensity(screenCoordinates, Efield, envelope=None, title=""):
+    fig, axes = createFigure()
+
+    axes.plot(screenCoordinates, abs(Efield*conjugate(Efield)), linewidth=1,label="Diffracted beam")
+
+    if envelope is not None:
+        axes.plot(screenCoordinates, envelope, linestyle=":", linewidth=1,label="Envelope")
+
+    axes.set(xlabel='Position [µm]', ylabel='Intensite')
+    axes.set_title(title, ha='center',size=13)
+    plt.show()
 
 
 def reportProgress(i, N, label=""):
+    """ i goes from 0 to N-1 """
     tenPercent = int(N/10)
-    if tenPercent == 0:
-        tenPercent = 1
+    percent = int((i+1)*100/N)
+    if i % tenPercent == 0:
+        print("{0} {1:.0f}%".format(label, percent))
 
-    if (i+1) % tenPercent == 0:
-        print("{0} {1:.0f}%".format(label, 100*(i+1)/N))
 
-if __name__ == "__main__":
-      # This code computes the diffraction pattern in the simplest way possible:
-    # by adding spherical ways from the diffraction objstacle. It is extremely
-    # inefficient and slow, but it is trivial to understand.
+def singleSlitOpaqueWall(a, da):
+    """ We return two lists: one with the space coordinates, one with the 
+    amplitude at the corresponding coordinate. 
+    Amplitude is zero outside of coordinates from aCoords. """
 
-    # Distance to screen
-    R = 30000 # Distance source-screen in µm
-    Nr = 1
-    dR = R/Nr
-    rCoords = [(r+1)*dR for r in range(Nr)]
-
-    # Screen size in µm
-    Y = 60000
-    dy = 10
-    Ny = int(Y/dy)
-    yCoords = [(j-Ny/2)*dy for j in range(Ny)]
-
-    # Source slit length in µm
-    a = 4
-    da = 0.1
     Na = int(a/da)
-    aCoords = [(j-Na/2)*da for j in range(Na)]
-    
-    # Repetition of source slit a, every b microns
-    b = 10
-    Nb = 2
+    amplitude = (1/float(Na)) # normalized
+
+    aCoords = [(j-Na/2)*da for j in range(Na+1)] # space coordinates
+    amplitudes = [ amplitude for y in aCoords] # constant amplitude
+
+    return (aCoords, amplitudes)
+
+def gratingFromSingleSlit(aCoords, amplitudes, b, Nb):
+    """ We repeat the provided amplitudes, every 'b' distance, Nb times.  This is
+    therefore a "grating" """
+
     bCoords = [(j-Nb/2)*b for j in range(Nb)]
 
-    # Grating coordinates, i.e. repetition of slit 'a', every 'b' coordinate.
     gCoords = []
+    gratingAmplitudes = []
     for x in bCoords:
         gCoords.extend([ x+y for y in aCoords])
+        gratingAmplitudes.extend( [(A/Nb) for A in amplitudes] )
 
-    amplitude = (1/float(Na)) # normalized
+    return (gCoords, gratingAmplitudes)
+
+def singleSlitWithLinearPhaseOpaqueWall(a, da, minPhase, maxPhase):
+    """ We return the coordinates and amplitude of a single slit with a linear phase from
+    minPhase (at x = 0) to maxPhase (at x = a).
+    """
+    (aCoords, amplitudes) = singleSlitOpaqueWall(a, da)
+
+    phaseSlope = (maxPhase - minPhase)
+    phaseIntercept = minPhase - phaseSlope*aCoords[0] # We want minPhase at aCoords[0]
+    phaseMask = [ exp(-I * (phaseSlope*x + phaseIntercept) ) for x in aCoords] 
+    maskedAmplitudes = np.multiply(amplitudes, phaseMask)
+
+    return (aCoords, maskedAmplitudes)
+
+
+if __name__ == "__main__":
+    """ This code computes the diffraction pattern in the simplest way possible:
+    by adding spherical ways from the diffraction objstacle. It is extremely
+    inefficient and slow, but it is trivial to understand. """
 
     wavelength = 1
     k = 2*pi/wavelength
 
-    for idx,r in enumerate(rCoords): 
-        reportProgress(idx,len(rCoords), "Calculation for r={0:1.0f}".format(r))
 
-        Gfield = diffraction(gCoords, amplitude/Nb, k, r, yCoords, progressMessage="Calculating grating")
-        Efield = diffraction(aCoords, amplitude, k, r, yCoords, progressMessage="Calculating single slit")
-        
-        fig, axes = createFigure()
+    # Common definition: Distance to screen
+    R = 8000 # Distance source-screen in µm
 
-        if Nb == 1:
-            axes.plot(yCoords, abs(Efield*conjugate(Efield)), linewidth=1,label="Enveloppe d'une seule fente")
-            axes.set(xlabel='Distance', ylabel='Intensite')
-            axes.set_title("Figure: Profil d'intensite de diffraction a R={1} mm d'une fente de largeur a={0} µm".format(a,R/1000), ha='center',size=13)
-        else:
-            axes.plot(yCoords, abs(Gfield*conjugate(Gfield)), linewidth=1, label='Reseau de diffraction de {0} fentes'.format(Nb))
-            axes.plot(yCoords, abs(Efield*conjugate(Efield)), linestyle=':', linewidth=1,label="Enveloppe d'une seule fente")
-            axes.set(xlabel='Distance', ylabel='Intensite', title="Profil d'intensite de diffraction a R={2} mm\n {3} fentes de largeur a={0} µm, a tous les b={1} µm".format(a,b,R/1000, Nb))
-            axes.legend()
-        plt.show()
+    # Common definition: We sample as a function of theta every dTheta
+    Y = 8000
+    dY = 10
+    Ny = int(Y/dY)
+    screenCoords = [(j-(Ny-1)/2)*dY for j in range(Ny)]
+
+    # First example: single slit
+    a = 5
+    da = 0.1
+    (aCoords, amplitudes) = singleSlitOpaqueWall(a=5, da=0.1)
+    Efield = diffraction(aCoords, amplitudes, k, R, screenCoords, progressMessage="Calcul fente simple")
+    showDiffractedIntensity(screenCoords, Efield,title="Figure: Profil à R={0} mm d'une fente de largeur a={1} µm".format(R/1000,a))
+    envelope = abs(Efield*conjugate(Efield))
+
+    # Second example: 2 slits separated by small distance (b-a)
+    (aCoords, amplitudes) = singleSlitOpaqueWall(a=5, da=0.1)
+    b = 10
+    Nb = 2
+    (gratingCoords, gratingAmplitudes) = gratingFromSingleSlit(aCoords, amplitudes, b=b, Nb=Nb)
+    Efield = diffraction(gratingCoords, gratingAmplitudes, k, R, screenCoords, progressMessage="Calcul fente double")
+    showDiffractedIntensity( screenCoords, Efield, envelope=envelope, title="Figure: Profil à R={0} mm de 2 fentes de largeur a=5 µm séparées par {1:d} µm".format(R/1000, b-a))
+
+    # Third example: 10 slits separated by small distance (b-a)
+    (aCoords, amplitudes) = singleSlitOpaqueWall(a=a, da=da)
+    b = 10
+    Nb = 10
+    (gratingCoords, gratingAmplitudes) = gratingFromSingleSlit(aCoords, amplitudes, b=b, Nb=Nb)
+    Efield = diffraction(gratingCoords, gratingAmplitudes, k, R, screenCoords, progressMessage="Calcul {0} fentes".format(Nb))
+    showDiffractedIntensity(screenCoords, Efield, envelope=envelope, title="Figure: Profil à R={0} mm de 10 fentes de largeur a=5 µm séparées par {1:d} µm".format(R/1000, b-a))
+
+    # Fourth example: single slit with a linear phase mask from minPhase to maxPhase
+    d = 0.2
+    n = 1.5
+    minPhase=k*d
+    maxPhase=k*d*n
+    (aCoords, amplitudes) = singleSlitWithLinearPhaseOpaqueWall(a=a, da=da, minPhase=minPhase, maxPhase=maxPhase)
+    Efield = diffraction(aCoords, amplitudes, k, R, screenCoords, progressMessage="Calcul fente simple avec masque")
+    showDiffractedIntensity(screenCoords, Efield,title="Figure: Profil à R={0} mm d'une fente de largeur a=5 µm\navec un masque de phase lineaire de {1:0.2f} rad à {2:0.2f} rad\nNotez le deplacement vers la droite.".format(R/1000, minPhase, maxPhase))
+
+    # Fifth example: grating of slits from #4 with a linear phase mask from minPhase to maxPhase
+    (aCoords, amplitudes) = singleSlitWithLinearPhaseOpaqueWall(a=a, da=da, minPhase=minPhase, maxPhase=maxPhase)
+    (gratingCoords, gratingAmplitudes) = gratingFromSingleSlit(aCoords, amplitudes, b=10, Nb=5)
+    envelope = abs(Efield*conjugate(Efield)) # The field from example #4 gives us the envelope
+    Efield = diffraction(gratingCoords, gratingAmplitudes, k, R, screenCoords, progressMessage="Calcul reseau de fentes simples avec masque")
+    showDiffractedIntensity(screenCoords, Efield, envelope=envelope, title="Figure: Profil à R={0} mm de 10 fentes de largeur a=5 µm\navec un masque de phase lineaire de {1:0.2f} rad à {2:0.2f} rad".format(R/1000, minPhase, maxPhase))
+
+    # Sixth example: single slit, but in Fresnel zone (very close!)
+    (aCoords, amplitudes) = singleSlitOpaqueWall(a, da)
+    Rclose = 10
+    screenCoordsClose = [(j-(Ny-1)/2)*dY/200 for j in range(Ny)]
+    Efield = diffraction(aCoords, amplitudes, k, Rclose, screenCoordsClose, progressMessage="Calcul fente simple, zone de Fresnel")
+    showDiffractedIntensity(screenCoordsClose, Efield,title="Figure: Profil dans le regime de Fresnel à R={0} µm d'une fente de largeur a={1} µm".format(Rclose,a))
+
+    # Seventh example: single slit diffraction regime from fresnel (very close) to fraunhofer (very far)
+    rCoords = [2,5,10,20,50,100]
+    screenCoordsClose = [(j-Ny/2)*dY/30 for j in range(Ny)]
+    fig, axes = createFigure()
+    for idx,r in enumerate(rCoords):
+        Efield = diffraction(aCoords, amplitudes, k, r, screenCoordsClose, progressMessage="Calculating single slit at distance r={0}".format(r))
+        axes.plot(screenCoordsClose, abs(Efield*conjugate(Efield)), linewidth=1, label="Intensité à r={0}".format(r))
+    axes.set(xlabel='Distance', ylabel='Intensite')
+    axes.set_title("Figure: Transition de Fresnel a Fraunhofer", ha='center',size=13)
+    axes.legend()
+    plt.show()
+
 
