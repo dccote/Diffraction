@@ -1,15 +1,18 @@
-import numpy as np 
+from numpy import *
 from matplotlib import pyplot as plt
 from PIL import Image
 
+I = complex(0,1)
 class Field2D:
-    def __init__(self, ds:float, wavelength=float, N:int = None, array2D:np.ndarray = None):
+    def __init__(self, ds:float, wavelength=float, N:int = None, array2D:ndarray = None):
         self.dx = ds
         self.dy = ds
         self.wavelength= wavelength
         if array2D is None and N is not None:
-            self.values = np.zeros((N, N))
+            self.values = zeros((N, N),dtype=cdouble)
         elif array2D is not None and N is None:
+            if array2D.dtype != cdouble:
+                raise ValueError("Array must be complex")
             self.values = array2D
         else:
             raise ValueError("You must provide either the number of points N or an array")
@@ -22,27 +25,41 @@ class Field2D:
     @property
     def x(self) -> float:
         (N,dummy) = self.values.shape
-        return self.dx*np.linspace(-N/2, N/2, num=N, endpoint=False)
+        return self.dx*linspace(-N/2, N/2, num=N, endpoint=False)
 
     @property
     def y(self) -> float:
         (dummy,N) = self.values.shape
-        return self.dy*np.linspace(-N/2, N/2, num=N, endpoint=False)
+        return self.dy*linspace(-N/2, N/2, num=N, endpoint=False)
 
-    def display(self):
-        plt.imshow(Image.fromarray(self.values))
+    def showIntensity(self):
+        plt.imshow(Image.fromarray(real(self.values*conjugate(self.values))))
         plt.show()
 
-    def setGaussian(self, width:float, amplitude:float = 1.0):
-        for (i,x) in enumerate(self.x):
-            for (j,y) in enumerate(self.y):
-                self.values[i,j] = amplitude*np.exp(-(x*x+y*y)/(width*width))
+    def showField(self):
+        plt.imshow(Image.fromarray(abs(self.values)))
+        plt.show()
 
+    def showPhase(self):
+        plt.imshow(Image.fromarray(angle(self.values)))
+        plt.show()
+
+    def propagate(self, distance:float):
+        raise Error("Not Implemented")
+
+    @classmethod
+    def Gaussian(self, ds:float, N:int, width:float, wavelength:float, amplitude:float = 1.0):
+        allXs = ds*linspace(-N/2, N/2, num=N, endpoint=False)
+        allYs = ds*linspace(-N/2, N/2, num=N, endpoint=False)
+
+        values = zeros((N, N),dtype=cdouble)
+        for (i,x) in enumerate(allXs):
+            for (j,y) in enumerate(allYs):
+                values[i,j] = amplitude*exp(-(x*x+y*y)/(width*width))
+        return Field2D(array2D=values, ds=ds, wavelength=wavelength)
 
 if __name__ == "__main__":
-    f=Field2D(ds=0.1, N=1024)
-    f.setGaussian(width=10, amplitude=255.0)
-    g = f
-    g.display()
-    g.setGaussian(width=20, amplitude=255.0)
-    g.display()
+    f = Field2D.Gaussian(width=10, amplitude=16.0, ds=0.1, N=1024, wavelength=2)
+    f.showIntensity()
+    f.showPhase()
+    f.showField()
