@@ -57,14 +57,15 @@ $$
 
 ## Troisième version: Fresnel
 
-** --- Cette question n'est pas complétée encore. --- **
+**Cette question n'est pas complétée encore je dois mettre les équations.**
 
-Le coeur du TP5 est dans cette question. La diffraction de Fresnel ressemble à la diffraction de Fraunhofer mais un terme quadratique en $r$ subsiste dans l'exponentielle.
+Le coeur du TP5 est dans cette question et la prochaine. La diffraction de Fresnel ressemble à la diffraction de Fraunhofer mais un terme quadratique en $r$ subsiste dans l'exponentielle. **Obtenez l'équation ou attendez que je l'écrive et que je la valide.**
 
 ### Calculs
 
 1. Implémentez la diffraction de Fresnel par une convolution.  Vous pouvez allez voir ici: https://en.wikipedia.org/wiki/Fresnel_diffraction
 2. Validez qu'un faisceau gaussien est parfaitement reproduit comme prévu
+3. Assurez-vous que votre code peut traiter 1) des petits obstacles et des 2) gros obstacles, autant à des petites distances ou des grandes distances.
 
 ## Lentille: une phase quadratique
 
@@ -73,11 +74,13 @@ Le coeur du TP5 est dans cette question. La diffraction de Fresnel ressemble à 
 1. Programmez une lentille mince de diamètre $D$ et de distance focale $f$ comme un masque de phase quadratique avec la distance au centre de l'axe optique.
 2. Validez que le point focal trace une fonction d'Airy et qu'il est de la grandeur prévue par les notions d'optique, c'est-a-dire essentiellement $ 1.22 f_{\#} \lambda$.
 
-## Question bonus
+## Question bonus: difficile
 
 Les billets de banque canadiens ont tous un hologramme qui diffracte en donnant la valeur nominative du billet. Allez voir la diapositive 18 et suivantes [ici](https://www.icloud.com/keynote/0UMPu6kVZWh8gJ-TVW2vEpu1g#Cours_12-Diffraction_HOWTO). Obtenez un masque de phase qui pourrait être sur un billet de 20 dollars et qui donne le patron de diffraction suivant:
 
 <img src="COVID.assets/20dollars-5940708.jpg" alt="20dollars" style="zoom:25%;" />
+
+L'article [suivant](https://www.osapublishing.org/boe/fulltext.cfm?uri=boe-2-3-696&id=210462) et la référence 17 dans ce même article qui se trouve [ici](https://www.nature.com/articles/nmeth.1241) sont utiles.
 
 # Annexe
 
