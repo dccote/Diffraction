@@ -4,18 +4,22 @@
 
 Vous êtes maintenant en charge du *Canadian Omni-Wave Illumination Diffractometer* (le COVID), un appareil puisssant qui utilise la diffraction pour caractériser des échantillons. Pour bien prédire les résultats, il est nécessaire de faire la simulation de faisceaux réels. Vous devez donc calculer le patron de diffraction en champ électrique en tout plan perpendiculaire à la direction de propagation, autant dans le champ proche que dans le champ lointain, et en 2D en plus.
 
-Vous avez le code d'un stagiaire qui l'a fait heureusement en Python mais malhereusement en 1D. Le code est disponible [ici](https://github.com/dccote/Diffraction/tree/master/Python) à https://github.com/dccote/Diffraction/tree/master/Python. Regardez ce code, très incomplet: nous voulons maintenant une version efficace en 2D car nous ferons énormément de calculs pour des faisceaux arbitraires.
+Vous avez le code d'un stagiaire qui l'a fait heureusement en Python mais malheureusement en 1D. Le code est disponible [ici](https://github.com/dccote/Diffraction/tree/master/Python) à https://github.com/dccote/Diffraction/tree/master/Python/diffraction1D.py. Regardez ce code, très incomplet: nous voulons maintenant une version efficace en 2D car nous ferons énormément de calculs pour des faisceaux arbitraires.
 
-Si vous avez besoin de rafraichir vos notions d'optique sur la diffraction, le cours d'optique PHY-2004/GPH-2005 est en ligne [ici](https://www.youtube.com/playlist?list=PLUxTghemi4FtyB41b-ApiPYV-CfbgT8Zj) à https://www.youtube.com/playlist?list=PLUxTghemi4FtyB41b-ApiPYV-CfbgT8Zj
+Si vous avez besoin de rafraichir vos notions d'optique sur la diffraction, le cours d'optique PHY-2004/GPH-2005 est en ligne [ici](https://www.youtube.com/playlist?list=PLUxTghemi4FtyB41b-ApiPYV-CfbgT8Zj) à https://www.youtube.com/playlist?list=PLUxTghemi4FtyB41b-ApiPYV-CfbgT8Zj et les diapositives sont aussi disponibles sur le Web.
 
 ## Première itération
 
 ### La référence
 
-Refaites en 2D en vous inspirant du code 1D une version de référence avec Huygens-Fresnel.  En effet, en utilisant le principe de Huygens-Fresnel, nous ne faisons absolument aucune approximation, donc le calcul est 100% valide en tout point. Comme point de départ, nous vous donnons `Field2D.py` (le code est à la fin) pour gérer un champ en 2D. **Implémentez cette méthode en 2D dans la class Field2D**:
+Refaites en 2D en vous inspirant du code 1D une version de référence avec Huygens-Fresnel.  En effet, en utilisant le principe de Huygens-Fresnel, nous ne faisons absolument aucune approximation, donc le calcul est 100% valide en tout point:
+$$
+{\bf E}_\sigma({\bf r})  \approx \int {\bf E}_\Sigma({\bf r^\prime})\frac{e^{i k |{\bf r-r^\prime}|}}{|{\bf r-r^\prime}|}  d{\bf r^\prime}.
+$$
+Comme point de départ, nous vous donnons `Field2D.py` (le code est à la fin) pour gérer un champ en 2D. **Implémentez cette méthode en 2D dans la classe Field2D**:
 
 ```python
-def propagate(self, distance:float)
+def propagate(self, distance:float) # Modifie 
 ```
 
   Bien que triviale à coder, vous verrez: elle est ***extrêmement lente*** à moins que le calcul n'inclut que très peu de points.
