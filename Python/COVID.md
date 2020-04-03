@@ -19,7 +19,7 @@ $$
 Comme point de départ, nous vous donnons `Field2D.py` (le code est à la fin) pour gérer un champ en 2D. **Implémentez cette méthode en 2D dans la classe Field2D**:
 
 ```python
-def propagate(self, distance:float) # Modifie 
+def propagate(self, distance:float) # Modifie le champ directement
 ```
 
   Bien que triviale à coder, vous verrez: elle est ***extrêmement lente*** à moins que le calcul n'inclut que très peu de points.
@@ -31,21 +31,27 @@ def propagate(self, distance:float) # Modifie
 $$
 w(z) = w_\circ \sqrt{1+\left(\frac{z}{z_\circ}\right)^2},
 $$
-avec $z_\circ = \pi w_\circ^2/\lambda$. Montrez que votre code suit cette règle.
+avec $z_\circ = \pi w_\circ^2/\lambda$. 
 
 ### Calculs
 
-Faites les calculs suivants: un obstacle carré de dimension 1 et 100 longueurs d'onde, à une distance de 1 mm et 1000 mm, illuminé par une onde plane.
+1. Montrez que votre code de propagation suit cette règle.
+2. Faites les calculs suivants: un obstacle carré de dimension 1 et 100 longueurs d'onde, à une distance de 1 mm et 1000 mm, illuminé par une onde plane.
 
-## Deuxième version: Fraunhofer
+## Deuxième version
 
-Nous voulons la diffraction en tout point, mais nous allons commencer par la version Fraunhofer, qui est très simple, du moins en apparence.  
+Nous voulons la diffraction en tout point, mais nous allons commencer par la version Fraunhofer, qui est très simple:  
 $$
 E_{\sigma}(\sin\theta_x,\sin\theta_y ) \approx \frac{{{e^{i{kR}}}}}{R}\int\int {E_\Sigma(x^\prime,y^\prime){e^{ - ik x^\prime \sin \theta_x - ik y^\prime \sin \theta_y}}dx^\prime dy^\prime}
 $$
 <img src="COVID.assets/image-20200403143339940.png" alt="image-20200403143339940" style="zoom:33%;" />
 
+### Calculs
 
+1. Implémentez cette version de `propagationFraunhofer` sans les transformées de Fourier
+2. Montrez que le calcul est plus rapide que la version de référence
+3. Montrez que la version de Fraunhofer est la version Huygens-Fresnel pour les grandes distances. Vérifiez que le critère de Fraunhofer est respecté.
+4. Obtenez un graphique **étalonné** pour le patron de diffraction d'un cercle de 5 microns de diamètre, à une longueur d'onde de 1 µm à 1 mm et 1000 mm.
 
 ## Troisième version: Fresnel (et Fraunhofer)
 
