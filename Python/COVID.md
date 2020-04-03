@@ -22,7 +22,7 @@ Comme point de départ, nous vous donnons `Field2D.py` (le code est à la fin) p
 def propagate(self, distance:float) # Modifie le champ directement
 ```
 
-  Bien que triviale à coder, vous verrez: elle est ***extrêmement lente*** à moins que le calcul n'inclut que très peu de points.
+  Bien que triviale à coder, vous verrez: elle est ***extrêmement lente*** à moins que le calcul n'inclut que très peu de points. Tentez de minimiser le nombre de points que vous prendrez.
 
 ### Validation
 
@@ -48,16 +48,23 @@ $$
 
 ### Calculs
 
-1. Implémentez cette version de `propagationFraunhofer` sans les transformées de Fourier
-2. Montrez que le calcul est plus rapide que la version de référence
-3. Montrez que la version de Fraunhofer est la version Huygens-Fresnel pour les grandes distances. Vérifiez que le critère de Fraunhofer est respecté.
-4. Obtenez un graphique **étalonné** pour le patron de diffraction d'un cercle de 5 microns de diamètre, à une longueur d'onde de 1 µm à 1 mm et 1000 mm.
+1. Implémentez cette version de `propagationFraunhofer` d'abord **sans** les transformées de Fourier
+2. Montrez que la version de Fraunhofer est la version Huygens-Fresnel pour les grandes distances. Vérifiez que le critère de Fraunhofer est respecté.
+3. Montrez que le calcul est plus rapide que la version de référence
+4. Implémentez cette version de `propagationFraunhoferFFT` **avec** les transformées de Fourier
+5. Montrez que le calcul est **beaucoup** plus rapide que la version de référence
+6. Obtenez un graphique **étalonné** pour le patron de diffraction d'un cercle de 5 microns de diamètre, à une longueur d'onde de 1 µm à 1 mm et 1000 mm.
 
 ## Troisième version: Fresnel
 
+** --- Cette question n'est pas complétée encore. --- **
 
+Le coeur du TP5 est dans cette question. La diffraction de Fresnel ressemble à la diffraction de Fraunhofer mais un terme quadratique en $r$ subsiste dans l'exponentielle.
 
+### Calculs
 
+1. Implémentez la diffraction de Fresnel par une convolution.  Vous pouvez allez voir ici: https://en.wikipedia.org/wiki/Fresnel_diffraction
+2. Validez qu'un faisceau gaussien est parfaitement reproduit comme prévu
 
 ## Lentille: une phase quadratique
 
@@ -68,9 +75,9 @@ $$
 
 ## Question bonus
 
-Les billets de banque canadiens ont tous un hologramme qui diffracte en donnant la valeur nominative du billet. Plus d'information ici. Obtenez un masque de phase qui pourrait être sur un billet de 20 dollars. 
+Les billets de banque canadiens ont tous un hologramme qui diffracte en donnant la valeur nominative du billet. Allez voir la diapositive 18 et suivantes [ici](https://www.icloud.com/keynote/0UMPu6kVZWh8gJ-TVW2vEpu1g#Cours_12-Diffraction_HOWTO). Obtenez un masque de phase qui pourrait être sur un billet de 20 dollars et qui donne le patron de diffraction suivant:
 
-
+<img src="COVID.assets/20dollars-5940708.jpg" alt="20dollars" style="zoom:25%;" />
 
 # Annexe
 
