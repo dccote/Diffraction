@@ -184,7 +184,7 @@ if __name__ == "__main__":
     plt.show()
 
 
-    # Seventh example: 10 slits separated by small distance (b-a), multiple wavelengths
+    # Eighth example: 10 slits separated by small distance (b-a), multiple wavelengths
     (aCoords, amplitudes) = sourceSingleSlitOpaqueWall(a=a, da=da)
     b = 10
     Nb = 10
