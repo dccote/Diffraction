@@ -53,13 +53,7 @@ $$
 3. Montrez que la version de Fraunhofer est la version Huygens-Fresnel pour les grandes distances. Vérifiez que le critère de Fraunhofer est respecté.
 4. Obtenez un graphique **étalonné** pour le patron de diffraction d'un cercle de 5 microns de diamètre, à une longueur d'onde de 1 µm à 1 mm et 1000 mm.
 
-## Troisième version: Fresnel (et Fraunhofer)
-
-
-
-## Quatrième version: convolution
-
-
+## Troisième version: Fresnel
 
 
 
@@ -67,9 +61,10 @@ $$
 
 ## Lentille: une phase quadratique
 
+### Calculs
 
-
-
+1. Programmez une lentille mince de diamètre $D$ et de distance focale $f$ comme un masque de phase quadratique avec la distance au centre de l'axe optique.
+2. Validez que le point focal trace une fonction d'Airy et qu'il est de la grandeur prévue par les notions d'optique, c'est-a-dire essentiellement $ 1.22 f_{\#} \lambda$.
 
 ## Question bonus
 
