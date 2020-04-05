@@ -1,5 +1,9 @@
 # TP5
 
+À remettre le 17 avril 2020.
+
+*Devoir dans le cadre du cours PHY-3500*
+
 ## Introduction
 
 Vous êtes maintenant en charge du *Canadian Omni-Wave Illumination Diffractometer* (le COVID), un appareil puisssant qui utilise la diffraction pour caractériser des échantillons. Pour bien prédire les résultats, il est nécessaire de faire la simulation de faisceaux réels. Vous devez donc calculer le patron de diffraction en champ électrique en tout plan perpendiculaire à la direction de propagation, autant dans le champ proche que dans le champ lointain, et en 2D en plus.
@@ -48,12 +52,12 @@ $$
 
 ### Calculs
 
-1. Implémentez cette version de `propagationFraunhofer` d'abord **sans** les transformées de Fourier
+1. Implémentez cette version de `propagationFraunhofer` d'abord **sans** les transformées de Fourier: faites l'intégrale 2D en $x^\prime$ et $y^\prime$.
 2. Montrez que la version de Fraunhofer est la version Huygens-Fresnel pour les grandes distances. Vérifiez que le critère de Fraunhofer est respecté.
 3. Montrez que le calcul est plus rapide que la version de référence
 4. Implémentez cette version de `propagationFraunhoferFFT` **avec** les transformées de Fourier
 5. Montrez que le calcul est **beaucoup** plus rapide que la version de référence
-6. Obtenez un graphique **étalonné** pour le patron de diffraction d'un cercle de 5 microns de diamètre, à une longueur d'onde de 1 µm à 1 mm et 1000 mm.
+6. Obtenez un graphique **étalonné** pour le patron de diffraction d'un cercle de 5 microns de diamètre, à une longueur d'onde de 1 µm à une distance de 1 mm et 1000 mm.
 
 ## Troisième version: Fresnel
 
@@ -63,9 +67,10 @@ Le coeur du TP5 est dans cette question et la prochaine. La diffraction de Fresn
 
 ### Calculs
 
-1. Implémentez la diffraction de Fresnel par une convolution.  Vous pouvez allez voir ici: https://en.wikipedia.org/wiki/Fresnel_diffraction
+1. Implémentez la diffraction de Fresnel par une convolution dans l'espace de Fourier en 2D.  Vous pouvez allez voir ici: https://en.wikipedia.org/wiki/Fresnel_diffraction
 2. Validez qu'un faisceau gaussien est parfaitement reproduit comme prévu
-3. Assurez-vous que votre code peut traiter 1) des petits obstacles et des 2) gros obstacles, autant à des petites distances ou des grandes distances.
+3. Assurez-vous que votre code peut traiter 1) des petits obstacles et des 2) gros obstacles, autant à 3) des petites distances qu'à 4) des grandes distances.
+4. Obtenez un graphique **étalonné** pour le patron de diffraction d'un cercle de 5 microns de diamètre, à une longueur d'onde de 1 µm à 1 mm et 1000 mm.
 
 ## Lentille: une phase quadratique
 
@@ -83,6 +88,8 @@ Les billets de banque canadiens ont tous un hologramme qui diffracte en donnant 
 L'article [suivant](https://www.osapublishing.org/boe/fulltext.cfm?uri=boe-2-3-696&id=210462) et la référence 17 dans ce même article qui se trouve [ici](https://www.nature.com/articles/nmeth.1241) sont utiles.
 
 # Annexe
+
+## Field2D.py
 
 Pour vous faciliter la vie, une classe `Field2D` a été définie.  Elle conserve le champ électrique et l'étalonnage en `dx`
 
@@ -157,9 +164,10 @@ if __name__ == "__main__":
 
 
 
-
+## diffraction1D.py
 
 ```python
+
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.colors import BoundaryNorm
