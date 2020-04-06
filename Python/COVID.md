@@ -44,30 +44,51 @@ avec $z_\circ = \pi w_\circ^2/\lambda$.
 
 ## Deuxième version
 
-Nous voulons la diffraction en tout point, mais nous allons commencer par la version Fraunhofer, qui est très simple:  
+Nous voulons la diffraction en tout point, mais nous allons commencer par la version Fraunhofer, qui est très simple avec $k_x \equiv k \sin \theta_x$ et $k_y \equiv k \sin \theta_y$ :  
 $$
-E_{\sigma}(\sin\theta_x,\sin\theta_y ) \approx \frac{{{e^{i{kR}}}}}{R}\int\int {E_\Sigma(x^\prime,y^\prime){e^{ - ik x^\prime \sin \theta_x - ik y^\prime \sin \theta_y}}dx^\prime dy^\prime}
+E_{\sigma}(k \sin \theta_x,k \sin \theta_y ) \approx \frac{{{e^{i{kR}}}}}{R}\int\int {E_\Sigma(x^\prime,y^\prime){e^{ - ik_x x^\prime - ik_y y^\prime}}dx^\prime dy^\prime}
 $$
 <img src="COVID.assets/image-20200403143339940.png" alt="image-20200403143339940" style="zoom:33%;" />
 
 ### Calculs
 
 1. Implémentez cette version de `propagationFraunhofer` d'abord **sans** les transformées de Fourier: faites l'intégrale 2D en $x^\prime$ et $y^\prime$.
+
 2. Montrez que la version de Fraunhofer est la version Huygens-Fresnel pour les grandes distances. Vérifiez que le critère de Fraunhofer est respecté.
+
 3. Montrez que le calcul est plus rapide que la version de référence
-4. Implémentez cette version de `propagationFraunhoferFFT` **avec** les transformées de Fourier
+
+4. Implémentez cette version de `propagationFraunhoferFFT` **avec** les transformées de Fourier, avec:
+
+   $$
+   {\mathscr F}\left\{E(x,y)\right\} \equiv {\mathcal E}(k_x,k_y ) = \int\int {E(x^\prime,y^\prime){e^{ - ik_x x^\prime - ik_y y^\prime}}dx^\prime dy^\prime}
+   $$
+   
+
 5. Montrez que le calcul est **beaucoup** plus rapide que la version de référence
+
 6. Obtenez un graphique **étalonné** pour le patron de diffraction d'un cercle de 5 microns de diamètre, à une longueur d'onde de 1 µm à une distance de 1 mm et 1000 mm.
 
 ## Troisième version: Fresnel
 
 **Cette question n'est pas complétée encore je dois mettre les équations.**
 
-Le coeur du TP5 est dans cette question et la prochaine. La diffraction de Fresnel ressemble à la diffraction de Fraunhofer mais un terme quadratique en $r$ subsiste dans l'exponentielle. **Obtenez l'équation ou attendez que je l'écrive et que je la valide.**
+Le coeur du TP5 est dans cette question et la prochaine. La diffraction de Fresnel ressemble à la diffraction de Fraunhofer mais un terme quadratique en $r$ subsiste dans l'exponentielle. On remarque que cette équation a la forme d'une convolution dans l'espace réelle, donc elle peut être ré-écrite comme un produit dans l'espace de Fourier:
+$$
+E_{\sigma}(x,y,z) \approx \frac{{{e^{i{kz}}}}}{i \lambda z}\int\int {E_\Sigma(x^\prime,y^\prime, 0){e^{ - \frac{ik}{2z}\left[ (x-x^\prime)^2 +  (y-y^\prime)^2 \right] }}dx^\prime dy^\prime}
+$$
+ou avec $h(x,y) = {e^{ - \frac{ik}{2z}\left[ x^2 +  y^2 \right] }}$, on peut écrire:
+$$
+E_{\sigma}(x,y,z) \approx \frac{{{e^{i{kz}}}}}{i \lambda z}\left[ E_\Sigma(x,y, 0) \star  h(x,y) \right]
+$$
+Sachant qu'une convolution dans l'espace réel est un produit dans l'espace de Fourier, on pourra écrire: 
+$$
+E_{\sigma}(x,y,z) \approx \frac{{{e^{i{kz}}}}}{i \lambda z}\mathscr{F}^ {-1}\left[ \mathscr{F}\left\{E_\Sigma(x,y, 0)\right\}  \mathscr{F}\left\{h(x,y)\right\} \right]
+$$
 
 ### Calculs
 
-1. Implémentez la diffraction de Fresnel par une convolution dans l'espace de Fourier en 2D.  Vous pouvez allez voir ici: https://en.wikipedia.org/wiki/Fresnel_diffraction
+1. Implémentez la diffraction de Fresnel par un produit dans l'espace de Fourier en 2D suivi d'une transformée de Fourier inverse (eq. 8).  Vous pouvez allez voir ici: https://en.wikipedia.org/wiki/Fresnel_diffraction
 2. Validez qu'un faisceau gaussien est parfaitement reproduit comme prévu
 3. Assurez-vous que votre code peut traiter 1) des petits obstacles et des 2) gros obstacles, autant à 3) des petites distances qu'à 4) des grandes distances.
 4. Obtenez un graphique **étalonné** pour le patron de diffraction d'un cercle de 5 microns de diamètre, à une longueur d'onde de 1 µm à 1 mm et 1000 mm.
@@ -77,7 +98,8 @@ Le coeur du TP5 est dans cette question et la prochaine. La diffraction de Fresn
 ### Calculs
 
 1. Programmez une lentille mince de diamètre $D$ et de distance focale $f$ comme un masque de phase quadratique avec la distance au centre de l'axe optique.
-2. Validez que le point focal trace une fonction d'Airy et qu'il est de la grandeur prévue par les notions d'optique, c'est-a-dire essentiellement $ 1.22 f_{\#} \lambda$.
+2. Validez que le point focal d'une onde plane trace une fonction d'Airy et qu'il est de la grandeur prévue par les notions d'optique, c'est-a-dire essentiellement $ 1.22 f_{\#} \lambda$.
+3. Validez que la diffraction de Fresnel d'un faisceau à travers une lentille suivi de sa propagation jusqu'au plan focal est equivalente à la diffraction de Fraunhofer.
 
 ## Question bonus: difficile
 
