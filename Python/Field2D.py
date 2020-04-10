@@ -4,7 +4,7 @@ from PIL import Image
 
 I = complex(0,1)
 class Field2D:
-    def __init__(self, ds:float, wavelength=float, N:int = None, array2D:ndarray = None):
+    def __init__(self, ds:float, wavelength:float, N:int = None, array2D:ndarray = None):
         self.dx = ds
         self.dy = ds
         self.wavelength= wavelength
@@ -23,12 +23,12 @@ class Field2D:
         self.dy = rhs.dy
 
     @property
-    def x(self) -> float:
+    def x(self) -> ndarray:
         (N,dummy) = self.values.shape
         return self.dx*linspace(-N/2, N/2, num=N, endpoint=False)
 
     @property
-    def y(self) -> float:
+    def y(self) -> ndarray:
         (dummy,N) = self.values.shape
         return self.dy*linspace(-N/2, N/2, num=N, endpoint=False)
 
